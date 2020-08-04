@@ -1,0 +1,40 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<article>
+		<div class="media-body">
+			<div class="article-metadata">
+				<a class="mr-2" href="#">{{object_post.author}}</a>
+				<small class="text-muted">{{object_post.date_posted|date:"D-M-Y"}}</small>
+				<div>
+					{% if object_post.author == user %}
+					<a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post_update' object_post.id %}">Update</a>
+					<a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post_delete' object_post.id %}">Delete</a>
+				{% endif %}
+				</div>
+				
+			</div>
+			<h2 class="article-title">{{object_post.title}}</h2>
+			<p class="article-content">{{object_post.content}}</p>
+			{% if user.is_authenticated %}
+			<div class="content-section">
+				<form method="POST">
+					{% csrf_token %}
+					<fieldset class="form-group"> 
+						{{form|crispy}}
+					</fieldset>
+					<div class="form-group">
+						<button class="btn btn-outline-info" type="submit">Comment</button>
+					</div>
+				</form>
+		
+			</div>
+			{% endif %}
+			{% for comments in comment_list %}
+			<div><b>{{comments.user}}</b> <span>{{comments.date_posted}}</span></div>
+			<p class="article-content">{{comments.comment}}</p>
+			{% endfor %}
+		</div>
+	</article>
+		
+{% endblock content %}
