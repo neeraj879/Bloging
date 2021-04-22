@@ -4,6 +4,7 @@ from django.contrib import messages
 from .forms import RegisterForm,UserUpdate,ProfileUpdate
 from .models import Profile
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -12,6 +13,13 @@ def register(request):
 		form = RegisterForm(request.POST)
 		if form.is_valid():
 			form.save()
+			send_mail(
+				'Welcome !',
+				'Good to see you here !'+str(form.cleaned_data.get('username')),
+				'neerajmaurya879@gmail.com',
+				[str(form.cleaned_data.get('email'))],
+				fail_silently=False
+			)
 			username=form.cleaned_data.get('username')
 			messages.success(request,f'Account created for {username}!')
 			return redirect('profile')

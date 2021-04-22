@@ -18,8 +18,16 @@ def home(request):
 	posts = Post.objects.all()
 	return render(request,'home/home.html',{'posts':posts})
 
-def about(request):
-	return render(request,'home/about.html',{'title':'Django-About'})
+class UserListView(ListView):
+	model = User
+	template_name = 'home/about.html' # <app>/<model>_<viewtype>.html
+	context_object_name = 'user'
+	paginate_by = 2
+	
+	def get_queryset(self,  **kwargs):
+		user = get_object_or_404(User, username=self.kwargs.get('username'))
+		breakpoint()
+		return User.objects.filter(author=user)
 
 class PostListView(ListView):
 	model = Post
@@ -29,14 +37,13 @@ class PostListView(ListView):
 	paginate_by = 5
 
 class UserPostListView(ListView):
-    model = Post
-    template_name = 'home/user_posts.html'  # <app>/<model>_<viewtype>.html
-    context_object_name = 'posts'
-    paginate_by = 2
-
-    def get_queryset(self):
-        user = get_object_or_404(User, username=self.kwargs.get('username'))
-        return Post.objects.filter(author=user).order_by('-date_posted')
+	model = Post
+	template_name = 'home/user_posts.html' # <app>/<model>_<viewtype>.html
+	context_object_name = 'posts'
+	paginate_by = 2
+	def get_queryset(self):
+		user = get_object_or_404(User, username=self.kwargs.get('username'))
+		return Post.objects.filter(author=user).order_by('-date_posted')
 
 class PostDetailView(DetailView):
 	model = Post
@@ -46,6 +53,9 @@ class PostDetailView(DetailView):
 		context['Comments'] = Comments.objects.filter(post=pk)
 		context['form'] = Comment_form()
 		return context
+def UserDetail(request):
+	object_user = get_object_or_404(User, user=request.user)
+	return render(request,'home/about.html',{'object_user':'object_user'})
 def PostDetail(request,pk):
 	object_post = get_object_or_404(Post, pk=pk)
 	comment_list = Comments.objects.filter(post=pk).order_by('-date_posted')

@@ -1,7 +1,8 @@
 {% extends 'home/base.html' %}
+{% load staticfiles %}
 {% load crispy_forms_tags %}
 {% block content %}
-<style>
+<!--<style>
 	.button{
 	width: 40px;
 	height: 40px;
@@ -38,7 +39,7 @@
     transform: rotate(45deg);
     transform-origin :100% 100%;
 }
-</style>
+</style>-->
 <script>
 	$( document ).ready(function() {
 var scaleCurve = mojs.easing.path('M0,100 L25,99.9999983 C26.2328835,75.0708847 19.7847843,0 100,0');
@@ -121,10 +122,15 @@ $( ".button" ).click(function() {
 			</div>
 			<h2 class="article-title">{{object_post.title}}</h2>
 			<p class="article-content">{{object_post.content}}</p>
+			<!--<div class="article-metadata">
+				<div>
+					<div id='heart' class='button'>
+						<img  src="{% static 'Images\Like.jpg' %}"  height="40px" width="35px" alt="">
+					</div>
+				</div>
+			</div>-->
 			<div class="article-metadata">
-			</div>
-			<div>
-				<div id='heart' class='button'></div>
+				<h4>Comments:</h4>
 			</div>
 			{% if user.is_authenticated %}
 			<div class="content-section">
